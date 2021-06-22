@@ -1,7 +1,7 @@
 import { existsSync } from "https://deno.land/std@0.99.0/fs/mod.ts";
-import logger from "./logger.ts";
+import logger, { Loglevels } from "./logger.ts";
 
-// TODO: Offline/Online Time nach änderung, genaue Uhrzeit von änderung mhm
+logger.setLevel(Number(Deno.env.get("LOG_LEVEL")) ?? 1)
 
 if (!existsSync("./data")) Deno.mkdir("./data");
 
@@ -28,7 +28,6 @@ function ping(domains: string[]) {
 }
 
 function sendMessage(domain: string, online: boolean, lastChange: number) {
-    // * { domain: "dev.sepma.net", online: false, lastChange: 1624381543654 }
     console.log({ domain, online, lastChange })
     const embed = {
         title: online ? `[INFO] ${domain} is UP!` : `[ERROR] ${domain} is Down!`,
@@ -44,7 +43,7 @@ function sendMessage(domain: string, online: boolean, lastChange: number) {
             },
         ],
     }
-    fetch(`https://discord.com/api/v9/webhooks/${Deno.env.get("WEBHOOK_ID")}/${Deno.env.get("WEBHOOK_TOKEN")}`, {
+    const res = fetch(`https://discord.com/api/v9/webhooks/${Deno.env.get("WEBHOOK_ID")}/${Deno.env.get("WEBHOOK_TOKEN")}`, {
         headers: {
             "content-type": "application/json"
         }, method: "POST", body: JSON.stringify({
@@ -52,7 +51,8 @@ function sendMessage(domain: string, online: boolean, lastChange: number) {
             avatar_url: "https://sepma.net/pics/Sepma.gif",
             embed,
         })
-    })
+    }).then(res => res.json);
+    logger.info(res)
 }
 
 async function loadLastStautses(domains: string[]) {
@@ -80,6 +80,7 @@ async function writeFile(domain: string, online: boolean, lastChange = Date.now(
 async function getTextFile(domain: string) {
     if (!existsSync(`./data/${domain}`)) return;
     const data = await Deno.readTextFile(`./data/${domain}`)
+    logger.debug("Data: " + data)
 
     const [online, lastChange] = data.split(",");
 
