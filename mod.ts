@@ -43,16 +43,15 @@ async function sendMessage(domain: string, online: boolean, lastChange: number) 
             },
         ],
     }
-    const res = await fetch(`https://discord.com/api/v9/webhooks/${Deno.env.get("WEBHOOK_ID")}/${Deno.env.get("WEBHOOK_TOKEN")}`, {
+    await fetch(`https://discord.com/api/v9/webhooks/${Deno.env.get("WEBHOOK_ID")}/${Deno.env.get("WEBHOOK_TOKEN")}`, {
         headers: {
             "content-type": "application/json"
         }, method: "POST", body: JSON.stringify({
             username: "Sepma Ping!",
             avatar_url: "https://sepma.net/pics/Sepma.gif",
-            embed,
+            embeds: [embed],
         })
-    }).then(res => res.json);
-    logger.info(res)
+    })
 }
 
 async function loadLastStautses(domains: string[]) {
