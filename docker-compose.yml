@@ -1,0 +1,8 @@
+version: "3.2"
+services:
+  pinger:
+    build:
+      context: "."
+    environment:
+      WEBHOOK_ID: "someId"
+      WEBHOOK_TOKEN: "someToken"
