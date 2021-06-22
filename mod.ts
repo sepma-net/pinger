@@ -1,5 +1,6 @@
 import { existsSync } from "https://deno.land/std@0.99.0/fs/mod.ts";
 import logger from "./logger.ts";
+import formatTime from "./time.ts"
 
 logger.setLevel(Number(Deno.env.get("LOG_LEVEL")) ?? 1)
 
@@ -30,16 +31,16 @@ function ping(domains: string[]) {
 async function sendMessage(domain: string, online: boolean, lastChange: number) {
     console.log({ domain, online, lastChange })
     const embed = {
-        title: online ? `[INFO] ${domain} is UP!` : `[ERROR] ${domain} is Down!`,
+        title: online ? `[INFO] ${domain} is UP!` : `[ERROR] ${domain} is DOWN!`,
         color: online ? 65280 : 16711680,
         fields: [
             {
                 name: online ? "Online" : "Offline",
-                value: `${domain} is ${online ? "Online" : "Offline"} since\n ${new Date()}`,
+                value: `${domain} is ${online ? "online" : "offline"} since\n ${new Date()}`,
             },
             {
                 name: `Last ${online ? "Offline" : "Online"} Time`,
-                value: `${(Date.now() - lastChange) / 1000 / 60} Minutes`,
+                value: `${formatTime((Date.now() - lastChange) / 1000 / 60)} Minutes`,
             },
         ],
     }
@@ -49,6 +50,7 @@ async function sendMessage(domain: string, online: boolean, lastChange: number) 
         }, method: "POST", body: JSON.stringify({
             username: "Sepma Ping!",
             avatar_url: "https://sepma.net/pics/Sepma.gif",
+            content: "<@&835252819224821821>",
             embeds: [embed],
         })
     })

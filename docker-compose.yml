@@ -2,6 +2,7 @@ version: "3.2"
 services:
   sepma_pinger:
     container_name: "sepma_pinger"
+    restart: always
     build:
       context: "."
     environment:
