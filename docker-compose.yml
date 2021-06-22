@@ -7,4 +7,4 @@ services:
       WEBHOOK_ID: "someId"
       WEBHOOK_TOKEN: "someToken"
     volumes:
-      - ./data:/data
+      - ./data:/app/data
