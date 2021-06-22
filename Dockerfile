@@ -5,4 +5,4 @@ COPY . ./
 
 RUN deno cache --unstable mod.ts
 
-CMD ["deno", "run", "--unstable", "--allow-env", "--allow-read", "--allow-write", "--allow-net", "./mod.ts"]
+CMD ["run", "--unstable", "--allow-env", "--allow-read", "--allow-write", "--allow-net", "./mod.ts"]
