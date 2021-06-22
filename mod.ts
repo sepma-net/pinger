@@ -64,7 +64,7 @@ async function loadLastStautses(domains: string[]) {
                 await writeFile(domain, true)
             }
 
-            return [domain, (data.online ?? "true") === "true" ? true : false, data.lastChange] as [string, boolean, number]
+            return [domain, (data?.online ?? "true") === "true" ? true : false, data?.lastChange] as [string, boolean, number]
         })
     )
 
@@ -78,6 +78,7 @@ async function writeFile(domain: string, online: boolean, lastChange = Date.now(
 }
 
 async function getTextFile(domain: string) {
+    if (!existsSync(`./data/${domain}`)) return;
     const data = await Deno.readTextFile(`./data/${domain}`)
 
     const [online, lastChange] = data.split(",");
