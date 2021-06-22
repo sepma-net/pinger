@@ -7,5 +7,6 @@ services:
     environment:
       WEBHOOK_ID: "someId"
       WEBHOOK_TOKEN: "someToken"
+      LOG_LEVEL: 0
     volumes:
       - ./data:/app/data
