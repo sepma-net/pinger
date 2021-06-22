@@ -1,5 +1,5 @@
 import { existsSync } from "https://deno.land/std@0.99.0/fs/mod.ts";
-import logger, { Loglevels } from "./logger.ts";
+import logger from "./logger.ts";
 
 logger.setLevel(Number(Deno.env.get("LOG_LEVEL")) ?? 1)
 
@@ -27,7 +27,7 @@ function ping(domains: string[]) {
 
 }
 
-function sendMessage(domain: string, online: boolean, lastChange: number) {
+async function sendMessage(domain: string, online: boolean, lastChange: number) {
     console.log({ domain, online, lastChange })
     const embed = {
         title: online ? `[INFO] ${domain} is UP!` : `[ERROR] ${domain} is Down!`,
@@ -43,7 +43,7 @@ function sendMessage(domain: string, online: boolean, lastChange: number) {
             },
         ],
     }
-    const res = fetch(`https://discord.com/api/v9/webhooks/${Deno.env.get("WEBHOOK_ID")}/${Deno.env.get("WEBHOOK_TOKEN")}`, {
+    const res = await fetch(`https://discord.com/api/v9/webhooks/${Deno.env.get("WEBHOOK_ID")}/${Deno.env.get("WEBHOOK_TOKEN")}`, {
         headers: {
             "content-type": "application/json"
         }, method: "POST", body: JSON.stringify({
